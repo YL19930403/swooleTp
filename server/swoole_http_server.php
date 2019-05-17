@@ -17,7 +17,7 @@ $http = new swoole_http_server('127.0.0.1', 9501);
 //在浏览器访问 ： http://127.0.0.1:9501/index.html
 $http->set([
     'enable_static_handler' => true,
-    'document_root' => '/usr/local/bin/swooleProject/demo/data',
+    'document_root' => '/Users/yuliang/swooleTp/public/static',
 ]);
 
 $http->on('request', function (swoole_http_request $request, swoole_http_response $response){
