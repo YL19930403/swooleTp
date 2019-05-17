@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 // $Id$
 
+//域名访问： http://wudy.live.cn:8090/
+
+
 if (is_file($_SERVER["DOCUMENT_ROOT"] . $_SERVER["SCRIPT_NAME"])) {
     return false;
 } else {
