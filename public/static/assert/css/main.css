@@ -12,8 +12,6 @@ body {
 .hidden {
 	display: none;
 }
-
-aaa
 /* header content 采用该形式是为了header固定在顶部*/
 .header {
 	font-size: 1.2rem;
