@@ -24,8 +24,9 @@ $http->set([
     'document_root' => '/Users/yuliang/swooleTp/public/static',
 ]);
 
-$http->on('request', function (swoole_http_request $request, swoole_http_response $response){
+$http->on('request', function (swoole_http_request $request, swoole_http_response $response) use ($http){
     //将swoole的请求获取参数转换为PHP原生的形式
+    $_POST = [];
     if(isset($request->post))
     {
        foreach ($request->post as $k=>$v)
@@ -35,10 +36,11 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
     }
 
     //PHP中超全局不会被释放(会导致每次的请求参数都累计在一个数组里面)，需要我们手动去释放掉
-    if(!empty($_GET))
-    {
-        unset($_GET);
-    }
+//    if(!empty($_GET))
+//    {
+//        unset($_GET);
+//    }
+    $_GET = [];
     if(isset($request->get))
     {
         foreach ($request->get as $k=>$v)
@@ -47,6 +49,7 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
         }
     }
 
+    $_SERVER = [];
     if(isset($request->header))
     {
         foreach ($request->header as $k=>$v)
@@ -77,6 +80,14 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
     $response->cookie('sigma', 'xssss', time() + 1800);
     //end操作后将向客户端浏览器发送HTML内容,只能调用一次
     $response->end($res);
+
+    //关闭客户端连接: 会把变量全部注销掉，就不需要判断 !empty($_GET)
+    //直接close是不太有好的，需要我们修改TP框架的源码: 注释掉thinkphp/library/think/Request中 path() 跟 pathinfo()的is_null判断逻辑
+
+//    $http->close();
+
+
+
 });
 
 /**
