@@ -240,4 +240,13 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
+    //阿里大鱼配置
+    'aliyunsms' => [
+        'access_key_id' => 'LTAI2P4g1PIeFPrN',
+        'access_key_secret' => 'vZMPfRx1IpbzjjV3ks6UYaLKI6UOss',
+        'signName' => '爱车送',
+        'templateCode' => 'SMS_100885037',
+
+    ]
 ];
