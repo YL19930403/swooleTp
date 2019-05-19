@@ -11,6 +11,8 @@ class Sms
 
     public static function sendSms($phone_no = '13074491521')
     {
+
+        var_dump(config('app.aliyunsms.access_key_id'));die;
         AlibabaCloud::accessKeyClient(config('app.aliyunsms.access_key_id'), config('app.aliyunsms.access_key_secret'))
             ->regionId('cn-hangzhou')
             ->asDefaultClient();
@@ -21,7 +23,7 @@ class Sms
                 ->product('Dysmsapi')
                 ->version('2017-05-25')
                 ->action('SendSms')
-                ->method('POST')
+                ->method('GET')
                 ->options([
                     'query' => [
                         'PhoneNumbers' => $phone_no,
@@ -31,11 +33,14 @@ class Sms
                     ],
                 ]);
 
+//            print_r($result);die;
             return $result->toArray();
         }catch(ClientException $e){
             echo $e->getErrorMessage() . PHP_EOL;
         }catch (ServerException $e){
             echo $e->getErrorMessage() . PHP_EOL;
+        }finally{
+
         }
     }
 }
