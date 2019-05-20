@@ -43,6 +43,5 @@ class Login
         }else{
             return Util::show(config('code.error'), 'login failed!!!');
         }
-        echo $phone_num;
     }
 }

@@ -97,7 +97,7 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
     //关闭客户端连接: 会把变量全部注销掉，就不需要判断 !empty($_GET)
     //直接close是不太有好的，需要我们修改TP框架的源码: 注释掉thinkphp/library/think/Request中 path() 跟 pathinfo()的is_null判断逻辑
 
-    $http->close();
+//    $http->close();
 
 
 
