@@ -15,6 +15,12 @@ $http = new swoole_http_server('127.0.0.1', 9501);
 //如果存在会直接发送文件内容给客户端，不再触发onRequest回调。
 //开启swoole_http_server :  php  swoole_http_server.php
 //在浏览器访问 ： http://127.0.0.1:9501/index.html
+
+
+//注意：ThinkPHP默认只支持pathinfo访问:  pathinfo的访问形式: http://wudy.live.cn:8090/?s=index/index/sendSms
+// http://wudy.live.cn:8090/index/index/index  这种访问在swoole到ThinkPHP是不支持的（除非配置了）
+
+
 $http->set([
     //设置了worker_num和task_worker_num超过1时，每个进程都会触发一次onWorkerStart事件，可通过判断$worker_id区分不同的工作进程
     'work_num' => 5,
@@ -25,6 +31,9 @@ $http->set([
 ]);
 
 $http->on('request', function (swoole_http_request $request, swoole_http_response $response) use ($http){
+
+//    print_r($request->server);
+
     //将swoole的请求获取参数转换为PHP原生的形式
     $_POST = [];
     if(isset($request->post))
@@ -74,6 +83,8 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
         echo '异常错误' . $e->getCode() . $e->getMessage();
         exit;
     }
+
+    echo 'action-'.request()->action().PHP_EOL;
     $res = ob_get_contents();
     ob_end_clean();
 
@@ -84,7 +95,7 @@ $http->on('request', function (swoole_http_request $request, swoole_http_respons
     //关闭客户端连接: 会把变量全部注销掉，就不需要判断 !empty($_GET)
     //直接close是不太有好的，需要我们修改TP框架的源码: 注释掉thinkphp/library/think/Request中 path() 跟 pathinfo()的is_null判断逻辑
 
-//    $http->close();
+    $http->close();
 
 
 

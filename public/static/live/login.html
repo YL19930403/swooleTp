@@ -97,6 +97,7 @@
 
 			    var phone_num = $(" input[ name='phone_num' ] ").val()
 				url = "http://singwa.swoole.com:8811?s=index/login&phone_num="+phone_num;
+
 				$(this).html('已发送').attr('disabled', true);
 				// $.post()
 				$.get(url, function (data) {

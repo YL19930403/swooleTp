@@ -12,29 +12,34 @@ class Sms
     public static function sendSms($phone_no = '13074491521')
     {
 
-        var_dump(config('app.aliyunsms.access_key_id'));die;
-        AlibabaCloud::accessKeyClient(config('app.aliyunsms.access_key_id'), config('app.aliyunsms.access_key_secret'))
+        $app_key = config('aliyunsms.access_key_id');
+        $app_secret = config('aliyunsms.access_key_secret');
+
+        AlibabaCloud::accessKeyClient($app_key, $app_secret)
             ->regionId('cn-hangzhou')
             ->asDefaultClient();
 
         try{
             $authCodeMT = mt_rand(100000,999999);
+            $jsonTemplateParam = json_encode(['code'=>$authCodeMT]);
+
             $result = AlibabaCloud::rpc()
                 ->product('Dysmsapi')
                 ->version('2017-05-25')
                 ->action('SendSms')
-                ->method('GET')
+                ->method('POST')
                 ->options([
                     'query' => [
                         'PhoneNumbers' => $phone_no,
-                        'SignName' => "爱车送",
-                        'TemplateCode' => "SMS_100885037",
-                        'TemplateParam' => json_encode(['code'=>$authCodeMT, 'product' => 'dsd'], JSON_UNESCAPED_UNICODE),
+                        'SignName' => "swoole直播赛事平台",
+                        'TemplateCode' => "SMS_165414367",
+                        'TemplateParam' => $jsonTemplateParam,
                     ],
-                ]);
+                ])
+                ->request();
 
-//            print_r($result);die;
-            return $result->toArray();
+//            print_r($result);
+//            return $result->toArray();
         }catch(ClientException $e){
             echo $e->getErrorMessage() . PHP_EOL;
         }catch (ServerException $e){
