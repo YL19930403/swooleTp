@@ -25,11 +25,11 @@ class Index
     public function sendSms()
     {
         echo 'sendSms';
-//        try{
-//            $result = Sms::sendSms('13074491521');
-//        }catch(\Exception $e){
-//            echo '错误信息:'. $e->getMessage() . $e->getCode();
-//        }
+        try{
+            $result = Sms::sendSms('13074491521');
+        }catch(\Exception $e){
+            echo '错误信息:'. $e->getMessage() . $e->getCode();
+        }
     }
 
 }

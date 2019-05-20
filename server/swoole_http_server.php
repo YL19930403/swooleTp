@@ -17,6 +17,8 @@ $http = new swoole_http_server('127.0.0.1', 9501);
 //在浏览器访问 ： http://127.0.0.1:9501/index.html
 
 
+//http://wudy.live.cn:8090/static/live/login.html
+
 //注意：ThinkPHP默认只支持pathinfo访问:  pathinfo的访问形式: http://wudy.live.cn:8090/?s=index/index/sendSms
 // http://wudy.live.cn:8090/index/index/index  这种访问在swoole到ThinkPHP是不支持的（除非配置了）
 

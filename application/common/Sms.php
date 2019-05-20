@@ -9,7 +9,7 @@ use AlibabaCloud\Client\Exception\ServerException;
 class Sms
 {
 
-    public static function sendSms($phone_no = '13074491521')
+    public static function sendSms($phone_no = '13074491521', $authCodeMT)
     {
 
         $app_key = config('aliyunsms.access_key_id');
@@ -20,7 +20,7 @@ class Sms
             ->asDefaultClient();
 
         try{
-            $authCodeMT = mt_rand(100000,999999);
+//            $authCodeMT = mt_rand(100000,999999);
             $jsonTemplateParam = json_encode(['code'=>$authCodeMT]);
 
             $result = AlibabaCloud::rpc()
@@ -37,15 +37,13 @@ class Sms
                     ],
                 ])
                 ->request();
-
 //            print_r($result);
-//            return $result->toArray();
+            return $result->toArray();
+//            return $result;
         }catch(ClientException $e){
             echo $e->getErrorMessage() . PHP_EOL;
         }catch (ServerException $e){
             echo $e->getErrorMessage() . PHP_EOL;
-        }finally{
-
         }
     }
 }

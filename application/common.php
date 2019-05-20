@@ -9,6 +9,8 @@
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+namespace app;
+
 // 应用公共文件
 
 function show($status, $message='', $data = [])
@@ -20,3 +22,4 @@ function show($status, $message='', $data = [])
     ];
     return json_encode($result);
 }
+
