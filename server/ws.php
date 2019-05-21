@@ -27,12 +27,13 @@ class ws
 
         //监听WebSocket连接打开事件
         $this->server->on('open', [$this, 'onOpen']);
+        //监听websocket消息事件
+        $this->server->on('message', [$this, 'onMessage']);
+
         $this->server->on('task', [$this, 'onTask']);
         $this->server->on('finish', [$this, 'onFinish']);
         //监听worker进程/task进程启动
         $this->server->on('workerstart', [$this, 'onWorkerStart']);
-        //监听websocket消息事件
-        $this->server->on('message', [$this, 'onMessage']);
         //监听http请求
         $this->server->on('request', [$this, 'onRequest']);
         //监听websocket关闭
@@ -44,7 +45,7 @@ class ws
     {
         // 定义应用目录
         define('APP_PATH', __DIR__ . '/../application/');
-        require_once  __DIR__ .   '/../thinkphp/start.php';;
+        require_once  __DIR__ .   '/../thinkphp/base.php';  //start.php
     }
 
     /**
@@ -54,7 +55,7 @@ class ws
      */
     public function onOpen(swoole_websocket_server $ws, $request)
     {
-        var_dump($request->fd, $request->get, $request->server);
+//        var_dump($request->fd, $request->get, $request->server);
         $ws->push($request->fd, "hello, welcome\n" . date('Y-m-d H:i:s', time()));
     }
 
@@ -85,7 +86,7 @@ class ws
      */
     public function onMessage(swoole_websocket_server $ws, swoole_websocket_frame $frame)
     {
-        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+//        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
         $ws->push($frame->fd, "server-push: {$frame->data}" . date('Y-m-d H:i:s', time()));
     }
 
@@ -101,8 +102,6 @@ class ws
 
     public function onTask(swoole_server $serv, int $task_id, int $worker_id,  $data)
     {
-        print_r($data);
-        sleep(10);
         return 'on task finish' .date('Y-m-d H:i:s', time()) ; //告诉worker
     }
 
@@ -119,3 +118,5 @@ class ws
         echo "finish-data-success:{$data}\n" . date('Y-m-d H:i:s', time());
     }
 }
+
+new ws();
