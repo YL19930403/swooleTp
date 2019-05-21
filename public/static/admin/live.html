@@ -148,7 +148,12 @@
        });
 
        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-       uploader.on( 'uploadSuccess', function( file ) {
+       uploader.on( 'uploadSuccess', function( file , response) {
+           // console.log(file.id);   //前端自动传过来的id
+           if(response.status == 1)
+           {
+               $('#'+file.id).append('<input type="hidden" name="image" value="'+response.data.image+'"/>');
+           }
            $( '#'+file.id ).addClass('upload-state-done');
        });
 
@@ -176,7 +181,7 @@
           event.preventDefault();
           var formData = $('form').serialize();
           // TODO: 请求后台接口跳转界面，前端跳转或者后台跳
-          $.get("http://singwa.swoole.com:8811?s=admin/live/push&" + formData, function (data) {
+          $.post("http://wudy.live.cn:8090?s=admin/live/push&" + formData, function (data) {
 
             if (data.status == 1) {
               // 登录成功

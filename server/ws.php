@@ -41,7 +41,7 @@ class ws
         $this->server->start();
     }
 
-    public function onWorkerStart(swoole_http_server $server, $worker_id)
+    public function onWorkerStart(swoole_websocket_server $server, $worker_id)
     {
         // 定义应用目录
         define('APP_PATH', __DIR__ . '/../application/');
@@ -123,14 +123,13 @@ class ws
             }
         }
 
-        $_GET['http_server'] = $this->http;
+        $_POSt['http_server'] = $this->server;
         ob_start();
         //执行应用
         try {
             think\App::run()->send();
         }catch (\Exception $e){
-            echo '异常错误' . $e->getCode() . $e->getMessage();
-            exit;
+            echo 'Exception:' . $e->getCode() . $e->getMessage();
         }
 
         echo 'action-'.request()->action().PHP_EOL;

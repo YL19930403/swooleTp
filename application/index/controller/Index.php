@@ -22,6 +22,7 @@ class Index
 
     }
 
+    //php  Http.php  (9501)
     //http://wudy.live.cn:8090/?s=index/index/sendSms
     public function sendSms()
     {
@@ -32,5 +33,6 @@ class Index
 //            echo '错误信息:'. $e->getMessage() . $e->getCode();
 //        }
     }
+
 
 }
