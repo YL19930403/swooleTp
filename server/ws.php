@@ -45,7 +45,7 @@ class ws
     {
         // 定义应用目录
         define('APP_PATH', __DIR__ . '/../application/');
-        require_once  __DIR__ .   '/../thinkphp/base.php';  //start.php
+        require  __DIR__ .   '/../thinkphp/base.php';  //start.php 或者  base
     }
 
     /**
@@ -77,6 +77,69 @@ class ws
                 $this->server->push($fd, $request->get['message']);
             }
         }
+
+        //将swoole的请求获取参数转换为PHP原生的形式
+        $_POST = [];
+        if(isset($request->post))
+        {
+            foreach ($request->post as $k=>$v)
+            {
+                $_POST[$k] = $v;
+            }
+        }
+
+        $_FILES = [];
+        if(isset($request->files))
+        {
+            foreach ($request->files as $k=>$v)
+            {
+                $_FILES[$k] = $v;
+            }
+        }
+
+        $_GET = [];
+        if(isset($request->get))
+        {
+            foreach ($request->get as $k=>$v)
+            {
+                $_GET[$k] = $v;
+            }
+        }
+
+        $_SERVER = [];
+        if(isset($request->header))
+        {
+            foreach ($request->header as $k=>$v)
+            {
+                $_SERVER[strtoupper($k)] = $v;
+            }
+        }
+
+        if(isset($request->server))
+        {
+            foreach ($request->server as $k=>$v)
+            {
+                $_SERVER[strtoupper($k)] = $v;
+            }
+        }
+
+        $_GET['http_server'] = $this->http;
+        ob_start();
+        //执行应用
+        try {
+            think\App::run()->send();
+        }catch (\Exception $e){
+            echo '异常错误' . $e->getCode() . $e->getMessage();
+            exit;
+        }
+
+        echo 'action-'.request()->action().PHP_EOL;
+        $res = ob_get_contents();
+        ob_end_clean();
+
+        $response->cookie('sigma', 'xssss', time() + 1800);
+        //end操作后将向客户端浏览器发送HTML内容,只能调用一次
+        $response->end($res);
     }
 
     /**
