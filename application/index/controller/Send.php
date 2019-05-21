@@ -17,7 +17,7 @@ use think\Log;
 // 指定允许其他域名访问
 header('Access-Control-Allow-Origin:*');
 // 响应类型
-header('Access-Control-Allow-Methods:POST');
+header('Access-Control-Allow-Methods:GET');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
@@ -39,9 +39,9 @@ class Send{
 
         //生产随机数
         $authCodeMT = mt_rand(100000,999999);
+        /*
         try{
             $result = Sms::sendSms($phone_num, $authCodeMT);
-//            return Util::show(config('code.success'), 'success', $result);
         }catch(\Exception $e){
             Log::record('阿里大鱼内部异常', 'ERROR');
             return Util::show(config('code.error'), '阿里大鱼内部异常');
@@ -50,7 +50,7 @@ class Send{
         if($result['Code'] == 'OK')
         {
             //记录redis
-            $redis = \Swoole\Coroutine\Redis();
+            $redis = new \Swoole\Coroutine\Redis();
             $redis->connect(config('redis.host'), config('redis.port'));
             $redis->set(Redis::smsKey($phone_num), $authCodeMT, config('redis.out_time'));
             return Util::show(config('code.success'), 'success');
@@ -58,7 +58,17 @@ class Send{
             Log::record('验证码发送失败', 'ERROR');
             return Util::show(config('code.error'), '验证码发送失败' );
         }
+        */
 
+        $task_data = [
+            'method' => 'sendSms',
+            'data' => [
+                'phone' => $phone_num,
+                'code' => $authCodeMT,
+            ]
+        ];
+        print_r($_GET);
 
+        $_GET['http_server']->task($task_data);
     }
 }

@@ -8,7 +8,7 @@
 
 class Http
 {
-    CONST HOST = '0.0.0.0';
+    CONST HOST = '127.0.0.1';
     CONST PORT = 9501;
 
     public $http = null;
@@ -32,11 +32,16 @@ class Http
         $this->http->start();
     }
 
+    /**
+     * 监听worker进程/task进程启动
+     * @param swoole_http_server $server
+     * @param $worker_id
+     */
     public function onWorkerStart(swoole_http_server $server, $worker_id)
     {
         // 定义应用目录
         define('APP_PATH', __DIR__ . '/../application/');
-        require_once  __DIR__ .   '/../thinkphp/base.php';;
+        require_once  __DIR__ .   '/../thinkphp/start.php';
     }
 
     public function onRequest(swoole_http_request $request, swoole_http_response $response)
@@ -82,6 +87,7 @@ class Http
             }
         }
 
+        $_GET['http_server'] = $this->http;
         ob_start();
         //执行应用
         try {
@@ -102,9 +108,20 @@ class Http
 
     public function onTask(swoole_server $serv, int $task_id, int $worker_id,  $data)
     {
-        print_r($data);
-        sleep(10);
-        return 'on task finish' .date('Y-m-d H:i:s', time()) ; //告诉worker
+//        $smsObj = new \app\common\Sms();
+//        try{
+//            $response = $smsObj::sendSms($data['phone'], $data['code']);
+//        }catch(\Exception $e){
+//            echo $e->getMessage();
+//        }
+
+        //分发任务
+        $obj = new app\common\lib\task\Task();
+        $method = $data['method'];
+        $flag = $obj->$method($data['data']);
+        return $flag;
+
+//        return 'on task finish' .date('Y-m-d H:i:s', time()) ; //告诉worker
     }
 
     public function onFinish(swoole_http_server $serv, int $task_id, string $data)
